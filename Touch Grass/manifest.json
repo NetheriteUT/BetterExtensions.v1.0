@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "Touch Grass plz",
   "version": "1.0",
-  "description": "Best extension I've ever made!",
-  "permissions": ["scripting", "tabs"],
+  "description": "J...just go touch grass...im begging :P",
+  "permissions": ["scripting", "tabs", "alarms"],
   "background": {
     "service_worker": "background.js"
   },
