@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Organizer",
+  "version": "1.0",
+  "description": "Very neat if you have to many tabs open at once",
+  "permissions": ["tabs", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_title": "Tab Overload"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["popup.html", "popup.css", "popup.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
