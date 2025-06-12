@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Touch Grass v1.0",
+  "version": "1.0",
+  "description": "Go touch grass! A perfect extension for everything grass related!",
+  "permissions": ["scripting"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["style.css"]
+    }
+  ],
+  "icons": {
+    "48": "icon.png"
+  }
+}
