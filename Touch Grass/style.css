@@ -1,0 +1,35 @@
+#touch-grass-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  animation: popupIn 2s forwards;
+  color: white;
+  font-family: sans-serif;
+}
+
+#touch-grass-popup img {
+  width: 200px;
+  animation: spinIn 2s infinite linear;
+  margin-top: 20px;
+}
+
+@keyframes popupIn {
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes spinIn {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.2);
+  }
+}
