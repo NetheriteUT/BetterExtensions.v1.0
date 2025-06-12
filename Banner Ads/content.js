@@ -1,64 +1,120 @@
 const banners = [
-  "https://i.ibb.co/pjrYPz2r/1.png",
-  "https://i.ibb.co/5X5dNzkT/2.png",
-  "https://i.ibb.co/zY2wPmn/3.png",
-  "https://i.ibb.co/HDhhNhKs/4.png",
-  "https://i.ibb.co/0RVJvcP/5.png"
+  "https://confusinggame.vercel.app/1.png",
+  "https://confusinggame.vercel.app/2.png",
+  "https://confusinggame.vercel.app/3.png",
+  "https://confusinggame.vercel.app/4.png",
+  "https://confusinggame.vercel.app/5.png"
 ];
 
-const randomBanner = () => banners[Math.floor(Math.random() * banners.length)];
+const RICKROLL_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+const DISPLAY_INTERVAL_MS = 60 * 1000; 
 
-const topAdStyle = `
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 999999;
-  background: white;
-  text-align: center;
-  padding: 4px 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-`;
+function createAdElement(position) {
+  const wrapper = document.createElement("div");
+  const id = `ad_${position}`;
+  wrapper.id = id;
+  wrapper.style = `
+    position: fixed;
+    ${position}: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999999;
+    background: white;
+    box-shadow: 0 ${position === "top" ? "2px" : "-2px"} 6px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 4px 0;
+  `;
 
-const vignetteContainerStyle = `
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  z-index: 999999;
-  text-align: center;
-`;
+  const img = document.createElement("img");
+  img.src = banners[Math.floor(Math.random() * banners.length)];
+  img.style = "max-height: 60px; cursor: pointer;";
+  img.addEventListener("click", () => {
+    window.open(RICKROLL_URL, "_blank");
+  });
 
-const vignetteStyle = `
-  max-height: 60px;
-  overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
-  background: white;
-  box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
-`;
+  const closeBtn = document.createElement("div");
+  closeBtn.textContent = "✕";
+  closeBtn.style = `
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    background: rgba(0,0,0,0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+  `;
+  closeBtn.onclick = () => {
+    wrapper.remove();
+    localStorage.setItem(`${id}_hideUntil`, Date.now() + DISPLAY_INTERVAL_MS);
+    setTimeout(() => injectAd(position), DISPLAY_INTERVAL_MS);
+  };
 
-const vignetteExpandedStyle = `
-  max-height: 300px;
-`;
+  wrapper.appendChild(img);
+  wrapper.appendChild(closeBtn);
+  return wrapper;
+}
 
-const topAd = document.createElement("div");
-topAd.style = topAdStyle;
-topAd.innerHTML = `<img src="${randomBanner()}" style="max-height: 60px;">`;
-document.body.appendChild(topAd);
+function injectAd(position) {
+  const id = `ad_${position}`;
+  const hideUntil = localStorage.getItem(`${id}_hideUntil`);
+  if (hideUntil && parseInt(hideUntil) > Date.now()) return;
+  const ad = createAdElement(position);
+  document.body.appendChild(ad);
+}
 
-const vignetteContainer = document.createElement("div");
-vignetteContainer.style = vignetteContainerStyle;
+injectAd("top");
 
-const vignette = document.createElement("div");
-vignette.id = "vignetteAd";
-vignette.style = vignetteStyle;
-vignette.innerHTML = `<img src="${randomBanner()}" style="max-height: 300px;"><br><button id="expandBtn" style="margin: 5px;">Expand</button><button id="closeBtn">Close</button>`;
+function injectBottomExpandable() {
+  const id = "ad_bottom_expandable";
+  const hideUntil = localStorage.getItem(`${id}_hideUntil`);
+  if (hideUntil && parseInt(hideUntil) > Date.now()) return;
 
-vignetteContainer.appendChild(vignette);
-document.body.appendChild(vignetteContainer);
+  const container = document.createElement("div");
+  container.id = id;
+  container.style = `
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 999999;
+    background: white;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    text-align: center;
+    overflow: hidden;
+    max-height: 60px;
+    transition: max-height 0.3s ease-in-out;
+  `;
 
-document.addEventListener("click", (e) => {
-  if (e.target.id === "expandBtn") {
-    vignette.style.maxHeight = "300px";
-  } else if (e.target.id === "closeBtn") {
-    vignetteContainer.remove();
-  }
-});
+  const img = document.createElement("img");
+  img.src = banners[Math.floor(Math.random() * banners.length)];
+  img.style = "max-height: 300px; cursor: pointer;";
+  img.addEventListener("click", () => {
+    window.open(RICKROLL_URL, "_blank");
+  });
+
+  const controls = document.createElement("div");
+  controls.style = "margin: 4px;";
+  controls.innerHTML = `
+    <button id="expandBtn" style="margin-right: 5px;">Expand</button>
+    <button id="closeExpandableBtn">✕</button>
+  `;
+
+  controls.querySelector("#expandBtn").onclick = () => {
+    container.style.maxHeight = "300px";
+  };
+
+  controls.querySelector("#closeExpandableBtn").onclick = () => {
+    container.remove();
+    localStorage.setItem(`${id}_hideUntil`, Date.now() + DISPLAY_INTERVAL_MS);
+    setTimeout(injectBottomExpandable, DISPLAY_INTERVAL_MS);
+  };
+
+  container.appendChild(img);
+  container.appendChild(controls);
+  document.body.appendChild(container);
+}
+
+injectBottomExpandable();
