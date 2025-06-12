@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Job Application JUMPSCARE",
+  "version": "1.0",
+  "description": "You're cooked",
+  "permissions": ["scripting", "tabs", "alarms"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Job Image"
+  },
+  "host_permissions": ["<all_urls>"]
+}
